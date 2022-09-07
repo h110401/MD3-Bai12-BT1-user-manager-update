@@ -74,7 +74,7 @@ public class UserServlet extends HttpServlet {
         if (user == null) {
             dispatcher = request.getRequestDispatcher("error-404.jsp");
         } else {
-            this.userService.deleteUser(id);
+            this.userService.removeUserProcedure(id);
             List<User> userList = this.userService.selectAllUsers();
             dispatcher = request.getRequestDispatcher("user/list.jsp");
             request.setAttribute("userList", userList);
@@ -101,7 +101,7 @@ public class UserServlet extends HttpServlet {
     }
 
     private void listUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<User> userList = this.userService.selectAllUsers();
+        List<User> userList = this.userService.selectAllUsersPro();
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
         request.setAttribute("userList", userList);
         dispatcher.forward(request, response);
@@ -143,7 +143,7 @@ public class UserServlet extends HttpServlet {
             user.setName(name);
             user.setEmail(email);
             user.setCountry(country);
-            this.userService.updateUser(user);
+            this.userService.updateUserProcedure(user);
             dispatcher = request.getRequestDispatcher("user/edit.jsp");
             request.setAttribute("message", "Edit user successful");
             request.setAttribute("user", user);

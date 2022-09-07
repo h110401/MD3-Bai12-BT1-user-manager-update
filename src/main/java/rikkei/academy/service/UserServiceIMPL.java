@@ -142,6 +142,56 @@ public class UserServiceIMPL implements IUserService {
         return userList;
     }
 
+    @Override
+    public List<User> selectAllUsersPro() {
+        List<User> users = new ArrayList<>();
+        String SQL_SELECT_PROCEDURE = "{call select_all_users_procedure()}";
+        try (
+                Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_PROCEDURE)
+        ) {
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String country = rs.getString("country");
+                users.add(new User(id, name, email, country));
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return users;
+    }
+
+    @Override
+    public void updateUserProcedure(User user) throws SQLException {
+        String SQL_UPDATE_PROCEDURE = "{call update_user_procedure(?,?,?,?)}";
+        try (
+                Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_PROCEDURE);
+        ) {
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getCountry());
+            System.out.println(preparedStatement);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    @Override
+    public void removeUserProcedure(int id) throws SQLException {
+        String SQL_REMOVE_PROCEDURE = "{call remove_user_procedure(?)}";
+        try (
+                Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_REMOVE_PROCEDURE);
+        ) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        }
+    }
+
     private void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
