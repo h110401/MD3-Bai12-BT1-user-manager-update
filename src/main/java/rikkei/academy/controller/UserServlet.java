@@ -155,7 +155,7 @@ public class UserServlet extends HttpServlet {
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String country = request.getParameter("country");
-        this.userService.insertUser(new User(name, email, country));
+        this.userService.addUserTransaction(new User(name, email, country));
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/create.jsp");
         request.setAttribute("message", "New user was created successful");
         dispatcher.forward(request, response);

@@ -20,6 +20,10 @@ public interface IUserService {
     List<User> findByCountry(String country);
 
     List<User> selectAllUsersPro();
+
     void updateUserProcedure(User user) throws SQLException;
+
     void removeUserProcedure(int id) throws SQLException;
+
+    void addUserTransaction(User user);
 }

@@ -12,7 +12,7 @@ public class UserServiceIMPL implements IUserService {
     private final String jdbcUsername = "root";
     private final String jdbcPassword = "123456";
 
-    private static final String INSERT_USER_SQL = "insert into user(email,name,country) values (?, ?, ?)";
+    private static final String INSERT_USER_SQL = "insert into user(name,email,country) values (?, ?, ?)";
     private static final String SELECT_USER_BY_ID = "select * from user where id = ?";
     private static final String SELECT_ALL_USER = "select * from user";
     private static final String DELETE_USER_SQL = "delete from user where id = ?";
@@ -189,6 +189,27 @@ public class UserServiceIMPL implements IUserService {
         ) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
+        }
+    }
+
+    @Override
+    public void addUserTransaction(User user) {
+        try (
+                Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL);
+        ) {
+            connection.setAutoCommit(false);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getCountry());
+
+            preparedStatement.execute();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+
+        } catch (SQLException e) {
+            printSQLException(e);
         }
     }
 
